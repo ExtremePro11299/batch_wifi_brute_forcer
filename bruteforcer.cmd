@@ -394,6 +394,13 @@ goto :mainmenu
     cls
     netsh wlan disconnect interface="%interface_id%" > nul
 
+    call :interface_find_state
+
+    if "%interface_state%" equ "connected" (
+        timeout /t 1 > nul
+        goto :scan
+    )
+
     if "!interface_id!" equ "not_defined" (
         call :color_echo . red "You have to select an interface to perform a scan"
         set wifi_target=not_defined
