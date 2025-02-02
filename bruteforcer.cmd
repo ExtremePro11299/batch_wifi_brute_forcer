@@ -396,7 +396,7 @@ goto :mainmenu
 
     call :interface_find_state
 
-    if "%interface_state%" equ "connected" (
+    if "%interface_state%" neq "disconnected" (
         timeout /t 1 > nul
         goto :scan
     )
