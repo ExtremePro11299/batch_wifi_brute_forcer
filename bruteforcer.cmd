@@ -17,6 +17,23 @@ setlocal enabledelayedexpansion
 title Batch Wi-Fi Brute Forcer
 color 0f
 
+if not exist "%SystemRoot%\System32\netsh.exe" (
+    call :color_echo . yellow "Warning. Netsh is missing from System32."
+    echo.
+    if not exist "%SystemRoot%\System32\sfc.exe" (
+        call :exit_fatal "Your system files seem to be corrupted. Batch Wi-Fi Brute Forcer can't start."
+    )
+    call :color_echo . yellow "System file corruption detected. Starting system file checker"
+    echo.
+    call :color_echo . yellow "Press Ctrl+C to cancel system file checking and force start the program."
+    echo.
+    echo.
+    call :color_echo . yellow "Note: The system file checker can only be used when running as administrator."
+    sfc /scannow
+    echo.
+    pause
+)
+
 cd /D %~dp0
 
 if exist "importwifi.xml" (
@@ -404,18 +421,7 @@ goto :mainmenu
 :scan
     cls
 
-<<<<<<< HEAD
-    call :interface_find_state
-
-    if "%interface_state%" neq "disconnected" (
-        timeout /t 1 > nul
-        goto :scan
-    )
-
-    if "!interface_id!" equ "not_defined" (
-=======
     if "%interface_id%" equ "not_defined" (
->>>>>>> 3fd25e184203a0972589b896bf1038fc0589b896
         call :color_echo . red "You have to select an interface to perform a scan"
         set wifi_target=not_defined
         echo.
